@@ -8,6 +8,10 @@
 #include <QImage>
 #include <QString>
 #include <QFileDialog>
+#include <iostream>
+
+
+#include "piece.h"
 
 
 namespace Ui {
@@ -22,9 +26,14 @@ public:
     explicit ROWindow(QWidget *parent = 0);
     ~ROWindow();
     void initGame();
+    void setPieceOnTable(QString piece, int x, int y);
 
 private:
     Ui::ROWindow *ui;
+    Piece* tableOfPieces[8][8];
+
+    int calculatePixel(int x);
+    void initTable();
 };
 
 #endif // ROWINDOW_H
