@@ -13,10 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        rowindow.cpp \
-    piece.cpp
+    graphics/piece.cpp \
+    graphics/rowindow.cpp
 
-HEADERS  += rowindow.h \
-    piece.h
+HEADERS  += graphics/piece.h \
+    graphics/rowindow.h
 
-FORMS    += rowindow.ui
+FORMS    += graphics/rowindow.ui
