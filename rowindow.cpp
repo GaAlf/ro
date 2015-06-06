@@ -12,3 +12,16 @@ ROWindow::~ROWindow()
 {
     delete ui;
 }
+
+void ROWindow::initGame()
+{
+     QGraphicsScene *scene = new QGraphicsScene();
+
+     QString imageFile = "imgs/reversi_table.png";
+
+     QImage image(imageFile);
+     QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+     scene->addItem(item);
+     ui->graphicsView->setScene(scene);
+     ui->graphicsView->show();
+}
