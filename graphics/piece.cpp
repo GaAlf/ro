@@ -23,7 +23,7 @@ QGraphicsPixmapItem* Piece::getImage()
 
 QGraphicsPixmapItem* Piece::loadPiece(QString piece, int x_pixel, int y_pixel)
 {
-    if(piece != "white" && piece != "black")
+    if(piece != "white" && piece != "black" && piece != "marker")
     {
         std::cout << "Error: wrong name of piece '" << piece.toStdString() << "', please try 'white' or 'black'." << std::endl;
         return NULL;

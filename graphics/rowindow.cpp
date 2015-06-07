@@ -67,6 +67,7 @@ void ROWindow::setPieceOnTable(QString pieceName, int x, int y)
         this->tableOfPieces[x][y] = NULL;
         scene->removeItem(piece->getImage());
         delete piece;
+        return;
     }
 
     int x_pixel = calculatePixel(y);

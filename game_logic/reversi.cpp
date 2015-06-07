@@ -71,9 +71,122 @@ void Reversi::changeTurn()
     }
 }
 
+bool Reversi::findMatch(int incX, int incY, int i, int j)
+{
+    int x,y;
+    x = i + incX;
+    y = j + incY;
+
+    if(incX == 0 && incY == 0)
+    {
+        return false;
+    }
+
+    int search = Reversi::BLACK;
+    if(this->turn == Reversi::BLACK)
+        search = Reversi::WHITE;
+
+    if(x >= 0 && y >= 0 && x < 8 && y < 8)
+    {
+        if(this->table[x][y] == search)
+        {
+            x += incX;
+            y += incY;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+    while(x >= 0 && y >= 0 && x < 8 && y < 8)
+    {
+        if(this->table[x][y] == search)
+        {
+            x += incX;
+            y += incY;
+        }
+        else
+        {
+            if(this->table[x][y] == this->turn)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    return false;
+}
+
+void Reversi::changePieces(int incX, int incY, int i, int j)
+{
+     int x,y;
+     x = i + incX;
+     y = j + incY;
+
+     if(incX == 0 && incY == 0)
+     {
+         return;
+     }
+
+     while(x >= 0 && y >= 0 && x < 8 && y < 8)
+     {
+
+         if(this->table[x][y] == this->turn)
+             break;
+
+         this->table[x][y] = this->turn;
+         x += incX;
+         y += incY;
+
+     }
+}
+
 void Reversi::transformPieces(int i, int j)
 {
-    //TODO caculate the pieces that will change.
+    bool match = false;
+    for(int x=-1; x<=1; x++)
+    {
+        for(int y=-1; y<=1; y++)
+        {
+            if(x==0 && y==0)
+                continue;
+
+            match = findMatch(x,y,i,j);
+            if(match)
+            {
+                changePieces(x,y,i,j);
+            }
+        }
+    }
+}
+
+bool Reversi::isMarker(int i, int j)
+{
+    bool match = false;
+    for(int x=-1; x<=1; x++)
+    {
+        for(int y=-1; y<=1; y++)
+        {
+            if(x==0 && y==0)
+                continue;
+
+            match = findMatch(x,y,i,j);
+            if(match)
+            {
+                return match;
+            }
+        }
+    }
+    return match;
 }
 
 void Reversi::calculateScores()
@@ -99,6 +212,39 @@ void Reversi::calculateScores()
     }
 }
 
+int Reversi::getTotalMarkers()
+{
+    int total = 0;
+    for(int i=0; i<8; i++)
+    {
+        for(int j=0; j<8; j++)
+        {
+            if(this->table[i][j] == Reversi::MARKER)
+            {
+                total++;
+            }
+        }
+    }
+
+    return total;
+}
+
+bool Reversi::hasMarkers()
+{
+    for(int i=0; i<8; i++)
+    {
+        for(int j=0; j<8; j++)
+        {
+            if(this->table[i][j] == Reversi::MARKER)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void Reversi::removeMarkers()
 {
     for(int i=0; i<8; i++)
@@ -115,8 +261,25 @@ void Reversi::removeMarkers()
 
 void Reversi::generateNewMarkers()
 {
-    this->removeMarkers();
-    //TODO calculateNewPossible markers.
+    bool match = false;
+    for(int i=0; i<8; i++)
+    {
+        for(int j=0; j<8; j++)
+        {
+            if(this->table[i][j] == Reversi::MARKER || this->table[i][j] == Reversi::EMPTY)
+            {
+                match = this->isMarker(i,j);
+                if(match)
+                {
+                    this->table[i][j] = Reversi::MARKER;
+                }
+                else
+                {
+                    this->table[i][j] = Reversi::EMPTY;
+                }
+            }
+        }
+    }
 }
 
 bool Reversi::play(int i, int j)
