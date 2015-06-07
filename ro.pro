@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     graphics/piece.cpp \
-    graphics/rowindow.cpp
+    graphics/rowindow.cpp \
+    game_logic/reversi.cpp
 
 HEADERS  += graphics/piece.h \
-    graphics/rowindow.h
+    graphics/rowindow.h \
+    game_logic/reversi.h
 
 FORMS    += graphics/rowindow.ui

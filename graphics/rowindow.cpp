@@ -6,6 +6,7 @@ ROWindow::ROWindow(QWidget *parent) :
     ui(new Ui::ROWindow)
 {
     ui->setupUi(this);
+    this->game = new Reversi();
 }
 
 ROWindow::~ROWindow()
@@ -32,6 +33,8 @@ void ROWindow::initGame()
 
     ui->graphicsView->show();
 
+    this->game->initGame();
+    this->updateTable();
 }
 
 void ROWindow::initTable()
@@ -53,10 +56,21 @@ void ROWindow::setPieceOnTable(QString pieceName, int x, int y)
         return;
     }
 
+    QGraphicsScene *scene = ui->graphicsView->scene();
+
+    if(pieceName == "empty")
+    {
+        Piece *piece = this->tableOfPieces[x][y];
+        if(piece == NULL)
+            return;
+
+        this->tableOfPieces[x][y] = NULL;
+        scene->removeItem(piece->getImage());
+        delete piece;
+    }
+
     int x_pixel = calculatePixel(y);
     int y_pixel = calculatePixel(x);
-
-    QGraphicsScene *scene = ui->graphicsView->scene();
 
     if(this->tableOfPieces[x][y] != NULL)
     {
@@ -79,5 +93,63 @@ int ROWindow::calculatePixel(int x)
     return x_pixel;
 }
 
+void ROWindow::updateTable()
+{
+    for(int i=0; i<8; i++)
+    {
+        for(int j=0; j<8; j++)
+        {
+            int pieceType = game->getPiece(i,j);
+            switch(pieceType)
+            {
+                case Reversi::EMPTY:
+                    this->setPieceOnTable("empty",i,j);
+                    break;
+                case Reversi::BLACK:
+                    this->setPieceOnTable("black",i,j);
+                    break;
+                case Reversi::WHITE:
+                    this->setPieceOnTable("white",i,j);
+                    break;
+                case Reversi::MARKER:
+                    this->setPieceOnTable("marker",i,j);
+                    break;
+            }
+        }
+    }
+}
 
+void ROWindow::mousePressEvent(QMouseEvent *event)
+{
+    int x = QCursor::pos().x();
+    x -= 12;
+    x -= this->pos().x();
+    x -= ui->frame->pos().x();
+    x -= ui->graphicsView->pos().x();
+
+    int y = QCursor::pos().y();
+    y -= 58;
+    y -= this->pos().y();
+    y -= ui->frame->pos().y();
+    y -= ui->graphicsView->pos().y();
+
+    if( x < 0 || y < 0 || x >= ui->graphicsView->width() || y >= ui->graphicsView->height())
+        return;
+
+    int i=0,j=0;
+    i = y/50;
+    j = x/50;
+
+    bool validMove = this->game->play(i,j);
+    if(validMove){
+        this->updateTable();
+        QChar line = 'A'+i;
+        QChar column = '1'+j;
+        QString pos = " "+(QString)line+""+(QString)column;
+        ui->statusBar->showMessage("Move on "+pos, 5000);
+    }
+    else{
+        ui->statusBar->showMessage("Invalid move!", 5000);
+    }
+}
 

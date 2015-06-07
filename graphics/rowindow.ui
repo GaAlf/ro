@@ -7,40 +7,114 @@
     <x>0</x>
     <y>0</y>
     <width>704</width>
-    <height>489</height>
+    <height>557</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>ROWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>10</y>
-      <width>410</width>
-      <height>410</height>
+      <x>110</x>
+      <y>20</y>
+      <width>471</width>
+      <height>471</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>402</width>
-      <height>402</height>
-     </size>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>400</width>
-      <height>400</height>
-     </size>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
     </property>
-    <property name="baseSize">
-     <size>
-      <width>400</width>
-      <height>400</height>
-     </size>
-    </property>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>60</y>
+       <width>402</width>
+       <height>402</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>402</width>
+       <height>402</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>400</width>
+       <height>400</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>400</width>
+       <height>400</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lcolumnLetters">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>41</width>
+       <height>401</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>25</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A&lt;/p&gt;&lt;p&gt;B&lt;/p&gt;&lt;p&gt;C&lt;/p&gt;&lt;p&gt;D&lt;/p&gt;&lt;p&gt;E&lt;/p&gt;&lt;p&gt;F&lt;/p&gt;&lt;p&gt;G&lt;/p&gt;&lt;p&gt;H&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <property name="indent">
+      <number>-1</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="llineNumbers">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>10</y>
+       <width>401</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>25</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>1    2    3    4    5    6    7    8</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

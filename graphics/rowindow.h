@@ -12,6 +12,7 @@
 
 
 #include "piece.h"
+#include "../game_logic/reversi.h"
 
 
 namespace Ui {
@@ -25,12 +26,17 @@ class ROWindow : public QMainWindow
 public:
     explicit ROWindow(QWidget *parent = 0);
     ~ROWindow();
+
     void initGame();
     void setPieceOnTable(QString piece, int x, int y);
+    void updateTable();
+
+    void mousePressEvent(QMouseEvent *event);
 
 private:
     Ui::ROWindow *ui;
     Piece* tableOfPieces[8][8];
+    Reversi* game;
 
     int calculatePixel(int x);
     void initTable();
