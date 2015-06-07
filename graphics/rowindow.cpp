@@ -159,6 +159,7 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
         QChar column = '1'+j;
         QString pos = " "+(QString)line+""+(QString)column;
         ui->statusBar->showMessage("Move on "+pos, 5000);
+        ui->label_lastMove->setText(pos);
     }
     else{
         ui->statusBar->showMessage("Invalid move!", 5000);
