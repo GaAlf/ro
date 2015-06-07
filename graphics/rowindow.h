@@ -33,6 +33,11 @@ public:
 
     void mousePressEvent(QMouseEvent *event);
 
+private slots:
+    void playCPU();
+    void restartGame();
+    void skipTurn();
+
 private:
     Ui::ROWindow *ui;
     Piece* tableOfPieces[8][8];

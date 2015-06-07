@@ -239,7 +239,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="restartButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -252,7 +252,7 @@
       <string>Restart Game</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="playCPUButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -311,7 +311,7 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="skipTurnButton">
      <property name="geometry">
       <rect>
        <x>10</x>

@@ -7,6 +7,10 @@ ROWindow::ROWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->game = new Reversi();
+
+    connect(ui->restartButton, SIGNAL(released()), this, SLOT(restartGame()));
+    connect(ui->playCPUButton, SIGNAL(released()), this, SLOT(playCPU()));
+    connect(ui->skipTurnButton, SIGNAL(released()), this, SLOT(skipTurn()));
 }
 
 ROWindow::~ROWindow()
@@ -164,5 +168,20 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
     else{
         ui->statusBar->showMessage("Invalid move!", 5000);
     }
+}
+
+void ROWindow::playCPU()
+{
+
+}
+
+void ROWindow::restartGame()
+{
+
+}
+
+void ROWindow::skipTurn()
+{
+
 }
 
