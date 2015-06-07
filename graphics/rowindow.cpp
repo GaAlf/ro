@@ -118,6 +118,17 @@ void ROWindow::updateTable()
             }
         }
     }
+
+    QString turn = "Black";
+    if(this->game->getTurn() == Reversi::WHITE)
+        turn = "White";
+
+    QString black_score = QString::number(this->game->getBlackScore());
+    QString white_score = QString::number(this->game->getWhiteScore());
+
+    ui->label_scoreBlack->setText(black_score);
+    ui->label_scoreWhite->setText(white_score);
+    ui->label_turn->setText(turn);
 }
 
 void ROWindow::mousePressEvent(QMouseEvent *event)

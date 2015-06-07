@@ -15,6 +15,7 @@ public:
     int getWhiteScore();
     int getBlackScore();
     int getTurn();
+    void changeTurn();
     bool play(int i, int j);
     bool hasMarkers();
     int getTotalMarkers();
@@ -25,7 +26,6 @@ private:
     int whiteScore;
     int blackScore;
 
-    void changeTurn();
     bool findMatch(int incX, int incY, int i, int j);
     void changePieces(int incX, int incY, int i, int j);
     void transformPieces(int i, int j);
