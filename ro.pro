@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
     graphics/piece.cpp \
     graphics/rowindow.cpp \
-    game_logic/reversi.cpp
+    game_logic/reversi.cpp \
+    artificial_intelligence/artificial_intelligence.cpp
 
 HEADERS  += graphics/piece.h \
     graphics/rowindow.h \
-    game_logic/reversi.h
+    game_logic/reversi.h \
+    artificial_intelligence/artificial_intelligencei.h
 
 FORMS    += graphics/rowindow.ui

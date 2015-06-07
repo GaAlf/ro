@@ -191,7 +191,26 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
 
 void ROWindow::playCPU()
 {
+    int i=0,j=0;
+    ArtificialIntelligence::calculateBetterMove(i,j,this->game);
+    if(i < 0 || j > 0 || i >= 8 || j >= 8)
+    {
+        ui->statusBar->showMessage("Error: index out of bounding.", 5000);
+        return;
+    }
 
+    bool validMove = this->game->play(i,j);
+    if(validMove){
+        this->updateTable();
+        QChar line = 'A'+i;
+        QChar column = '1'+j;
+        QString pos = " "+(QString)line+""+(QString)column;
+        ui->statusBar->showMessage("Move on "+pos, 5000);
+        ui->label_lastMove->setText(pos);
+    }
+    else{
+        ui->statusBar->showMessage("Invalid move!", 5000);
+    }
 }
 
 void ROWindow::restartGame()

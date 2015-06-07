@@ -13,6 +13,7 @@
 
 #include "piece.h"
 #include "../game_logic/reversi.h"
+#include "../artificial_intelligence/artificial_intelligencei.h"
 
 
 namespace Ui {
