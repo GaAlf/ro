@@ -98,6 +98,28 @@ int ROWindow::calculatePixel(int x)
     return x_pixel;
 }
 
+void ROWindow::verifyEndGame()
+{
+    if(this->game->endGame()){
+        ui->statusBar->showMessage("End Game!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        QString winner = "Black";
+        int win = this->game->gameWinner();
+        if(win == Reversi::WHITE)
+        {
+            winner = "White";
+        }
+        else{
+            if(win == Reversi::EMPTY)
+            {
+                winner = "No one";
+            }
+        }
+
+        QMessageBox::question(this,"Reversi", "End Game! The winner is "+winner+".",QMessageBox::Ok);
+    }
+}
+
 void ROWindow::updateTable()
 {
     for(int i=0; i<8; i++)
@@ -134,24 +156,7 @@ void ROWindow::updateTable()
     ui->label_scoreWhite->setText(white_score);
     ui->label_turn->setText(turn);
 
-    if(this->game->endGame()){
-        ui->statusBar->showMessage("End Game!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-        QString winner = "Black";
-        int win = this->game->gameWinner();
-        if(win == Reversi::WHITE)
-        {
-            winner = "White";
-        }
-        else{
-            if(win == Reversi::EMPTY)
-            {
-                winner = "No one";
-            }
-        }
-
-        QMessageBox::question(this,"Reversi", "End Game! The winner is "+winner+".",QMessageBox::Ok);
-    }
+    this->verifyEndGame();
 }
 
 void ROWindow::playGame(int i, int j)
