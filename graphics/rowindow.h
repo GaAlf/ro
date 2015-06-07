@@ -7,8 +7,8 @@
 #include <QGraphicsScene>
 #include <QImage>
 #include <QString>
-#include <QFileDialog>
 #include <iostream>
+#include <QMessageBox>
 
 
 #include "piece.h"

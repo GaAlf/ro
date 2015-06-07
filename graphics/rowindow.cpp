@@ -133,6 +133,25 @@ void ROWindow::updateTable()
     ui->label_scoreBlack->setText(black_score);
     ui->label_scoreWhite->setText(white_score);
     ui->label_turn->setText(turn);
+
+    if(this->game->endGame()){
+        ui->statusBar->showMessage("End Game!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        QString winner = "Black";
+        int win = this->game->gameWinner();
+        if(win == Reversi::WHITE)
+        {
+            winner = "White";
+        }
+        else{
+            if(win == Reversi::EMPTY)
+            {
+                winner = "No one";
+            }
+        }
+
+        QMessageBox::question(this,"Reversi", "End Game! The winner is "+winner+".",QMessageBox::Ok);
+    }
 }
 
 void ROWindow::mousePressEvent(QMouseEvent *event)

@@ -299,3 +299,34 @@ bool Reversi::play(int i, int j)
     return true;
 }
 
+bool Reversi::endGame()
+{
+    int totalMarkers = this->getTotalMarkers();
+    if(totalMarkers == 0)
+    {
+        this->changeTurn();
+        totalMarkers = this->getTotalMarkers();
+        this->changeTurn();
+        if(totalMarkers == 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+int Reversi::gameWinner()
+{
+    if(this->whiteScore > this->blackScore)
+    {
+        return Reversi::WHITE;
+    }
+
+    if(this->whiteScore < this->blackScore)
+    {
+        return Reversi::BLACK;
+    }
+
+    return Reversi::EMPTY;
+}
+

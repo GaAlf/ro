@@ -19,6 +19,8 @@ public:
     bool play(int i, int j);
     bool hasMarkers();
     int getTotalMarkers();
+    bool endGame();
+    int gameWinner();
 
 private:
     int table[8][8];
