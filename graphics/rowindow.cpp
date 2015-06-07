@@ -177,11 +177,23 @@ void ROWindow::playCPU()
 
 void ROWindow::restartGame()
 {
-
+    this->game->restartGame();
+    this->updateTable();
+    ui->label_lastMove->setText("");
 }
 
 void ROWindow::skipTurn()
 {
-
+    int totalMarkers = this->game->getTotalMarkers();
+    if(totalMarkers > 0)
+    {
+        ui->statusBar->showMessage("You can play, so you can't skip turn.", 5000);
+        return;
+    }
+    else
+    {
+        this->game->changeTurn();
+        this->updateTable();
+    }
 }
 

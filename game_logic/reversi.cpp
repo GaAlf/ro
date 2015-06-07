@@ -69,6 +69,8 @@ void Reversi::changeTurn()
     else{
         this->turn = Reversi::BLACK;
     }
+
+    this->generateNewMarkers();
 }
 
 bool Reversi::findMatch(int incX, int incY, int i, int j)
@@ -293,7 +295,6 @@ bool Reversi::play(int i, int j)
     this->calculateScores();
 
     this->changeTurn();
-    this->generateNewMarkers();
 
     return true;
 }
