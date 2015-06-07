@@ -46,6 +46,7 @@ private:
 
     int calculatePixel(int x);
     void initTable();
+    void playGame(int i, int j);
 };
 
 #endif // ROWINDOW_H
