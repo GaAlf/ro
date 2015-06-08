@@ -1,24 +1,12 @@
 #include "reversi.h"
 
-
 Reversi::Reversi()
 {
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            this->table[i][j] = EMPTY;
-        }
-    }
-
+    memset( table, EMPTY, BOARD_SIZE*BOARD_SIZE*sizeof(table[0][0]) );
 }
 
-Reversi::~Reversi(){}
+Reversi::~Reversi() { ; }
 
-int Reversi::getPiece(int x,  int y)
-{
-    return this->table[x][y];
-}
 
 void Reversi::initGame()
 {
@@ -28,67 +16,48 @@ void Reversi::initGame()
     this->table[4][4] = Reversi::WHITE;
 
     this->turn = Reversi::BLACK;
-    this->whiteScore = 2;
-    this->blackScore = 2;
+    this->score[BLACK] = 2;
+    this->score[WHITE] = 2;
+    this->score[MARKER] = 0;
 
     this->generateNewMarkers();
 }
 
 void Reversi::restartGame()
 {
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            this->table[i][j] = EMPTY;
-        }
-    }
-
+    memset( table, EMPTY, BOARD_SIZE*BOARD_SIZE*sizeof(table[0][0]) );
     this->initGame();
 }
 
-int Reversi::getWhiteScore()
-{
-    return this->whiteScore;
-}
-
-int Reversi::getBlackScore()
-{
-    return this->blackScore;
-}
-
-int Reversi::getTurn()
-{
-    return this->turn;
-}
+int Reversi::getWhiteScore() { return this->score[WHITE]; }
+int Reversi::getBlackScore() { return this->score[BLACK]; }
+int Reversi::getPiece(int x,  int y) { return this->table[x][y]; }
+int Reversi::getTurn() { return this->turn; }
+int Reversi::getTotalMarkers() { return this->score[MARKER]; }
+bool Reversi::hasMarkers() { return ( this->score[MARKER] > 0 ); }
 
 void Reversi::changeTurn()
 {
-    if(this->turn == Reversi::BLACK)
-        this->turn = Reversi::WHITE;
-    else{
-        this->turn = Reversi::BLACK;
-    }
-
+    this->turn = this->turn == Reversi::WHITE ? Reversi::BLACK : Reversi::WHITE;
     this->generateNewMarkers();
 }
 
-bool Reversi::findMatch(int incX, int incY, int i, int j)
+bool Reversi::scout(int incX, int incY, int i, int j)
 {
+    if(incX == 0 && incY == 0) { return false; }
+
     int x,y;
     x = i + incX;
     y = j + incY;
 
-    if(incX == 0 && incY == 0)
-    {
-        return false;
-    }
+    int search = this->turn != Reversi::BLACK ? Reversi::BLACK : Reversi::WHITE;
 
-    int search = Reversi::BLACK;
-    if(this->turn == Reversi::BLACK)
-        search = Reversi::WHITE;
+    if(x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) { return false; }
 
-    if(x >= 0 && y >= 0 && x < 8 && y < 8)
+    if(this->table[x][y] == search) { x += incX; y += incY; }
+    else { return false; }
+
+    while(x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE)
     {
         if(this->table[x][y] == search)
         {
@@ -97,189 +66,77 @@ bool Reversi::findMatch(int incX, int incY, int i, int j)
         }
         else
         {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-
-    while(x >= 0 && y >= 0 && x < 8 && y < 8)
-    {
-        if(this->table[x][y] == search)
-        {
-            x += incX;
-            y += incY;
-        }
-        else
-        {
-            if(this->table[x][y] == this->turn)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if(this->table[x][y] == this->turn) { return true; }
+            else { return false; }
         }
     }
 
     return false;
 }
 
-void Reversi::changePieces(int incX, int incY, int i, int j)
+void Reversi::flipPieces(int incX, int incY, int i, int j)
 {
-     int x,y;
-     x = i + incX;
-     y = j + incY;
+    if(incX == 0 && incY == 0) { return; }
 
-     if(incX == 0 && incY == 0)
-     {
-         return;
-     }
+    int x,y;
+    x = i + incX;
+    y = j + incY;
 
-     while(x >= 0 && y >= 0 && x < 8 && y < 8)
-     {
+    PieceType ally = this->turn;
+    PieceType enemy = this->turn == WHITE ? BLACK : WHITE;
 
-         if(this->table[x][y] == this->turn)
-             break;
+    while(x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE)
+    {
+        if(this->table[x][y] == ally) { return; }
+        if(this->table[x][y] == enemy) { this->score[enemy]--; }
 
-         this->table[x][y] = this->turn;
-         x += incX;
-         y += incY;
+        this->table[x][y] = this->turn;
+        this->score[ally]++;
+        x += incX;
+        y += incY;
 
-     }
+    }
 }
 
 void Reversi::transformPieces(int i, int j)
 {
-    bool match = false;
-    for(int x=-1; x<=1; x++)
-    {
-        for(int y=-1; y<=1; y++)
-        {
-            if(x==0 && y==0)
-                continue;
-
-            match = findMatch(x,y,i,j);
-            if(match)
-            {
-                changePieces(x,y,i,j);
-            }
+    score[MARKER]--;
+    for(int x = -1; x <= 1; x++) {
+        for(int y = -1; y <= 1; y++) {
+            if( scout(x,y,i,j) ) flipPieces(x,y,i,j);
         }
     }
 }
 
 bool Reversi::isMarker(int i, int j)
 {
-    bool match = false;
-    for(int x=-1; x<=1; x++)
-    {
-        for(int y=-1; y<=1; y++)
-        {
-            if(x==0 && y==0)
-                continue;
-
-            match = findMatch(x,y,i,j);
-            if(match)
-            {
-                return match;
-            }
+    for(int x = -1; x <= 1; x++) {
+        for(int y = -1; y <= 1; y++) {
+            if( scout(x,y,i,j) ) return true;
         }
     }
-    return match;
-}
-
-void Reversi::calculateScores()
-{
-    this->whiteScore = 0;
-    this->blackScore = 0;
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            if(this->table[i][j] == Reversi::BLACK)
-            {
-                this->blackScore++;
-            }
-            else
-            {
-                if(this->table[i][j] == Reversi::WHITE)
-                {
-                    this->whiteScore++;
-                }
-            }
-        }
-    }
-}
-
-int Reversi::getTotalMarkers()
-{
-    int total = 0;
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            if(this->table[i][j] == Reversi::MARKER)
-            {
-                total++;
-            }
-        }
-    }
-
-    return total;
-}
-
-bool Reversi::hasMarkers()
-{
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            if(this->table[i][j] == Reversi::MARKER)
-            {
-                return true;
-            }
-        }
-    }
-
     return false;
 }
 
 void Reversi::removeMarkers()
 {
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            if(this->table[i][j] == Reversi::MARKER)
-            {
+    for(int i=0; i < BOARD_SIZE; i++) {
+        for(int j=0; j < BOARD_SIZE; j++) {
+            if(this->table[i][j] == Reversi::MARKER) {
                 this->table[i][j] = Reversi::EMPTY;
             }
         }
     }
+
+    this->score[MARKER] = 0;
 }
 
 void Reversi::generateNewMarkers()
 {
-    bool match = false;
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
-            if(this->table[i][j] == Reversi::MARKER || this->table[i][j] == Reversi::EMPTY)
-            {
-                match = this->isMarker(i,j);
-                if(match)
-                {
-                    this->table[i][j] = Reversi::MARKER;
-                }
-                else
-                {
-                    this->table[i][j] = Reversi::EMPTY;
-                }
-            }
+    for(int i=0; i < BOARD_SIZE; i++) {
+        for(int j=0; j < BOARD_SIZE; j++) {
+            if(this->table[i][j] == Reversi::MARKER && !this->isMarker(i,j)) { this->table[i][j] = EMPTY; this->score[MARKER]--; }
+            else if(this->table[i][j] == Reversi::EMPTY && this->isMarker(i,j)) { this->table[i][j] = MARKER; this->score[MARKER]++; }
         }
     }
 }
@@ -290,9 +147,8 @@ bool Reversi::play(int i, int j)
         return false;
 
     this->table[i][j] = this->turn;
+    this->score[this->turn]++;
     this->transformPieces(i,j);
-
-    this->calculateScores();
 
     this->changeTurn();
 
@@ -317,16 +173,7 @@ bool Reversi::endGame()
 
 int Reversi::gameWinner()
 {
-    if(this->whiteScore > this->blackScore)
-    {
-        return Reversi::WHITE;
-    }
-
-    if(this->whiteScore < this->blackScore)
-    {
-        return Reversi::BLACK;
-    }
-
-    return Reversi::EMPTY;
+    if(this->score[WHITE] == this->score[BLACK]) return Reversi::EMPTY;
+    else return this->score[WHITE] > this->score[BLACK] ? this->score[WHITE] : this->score[BLACK];
 }
 

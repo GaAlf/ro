@@ -1,12 +1,16 @@
 #ifndef REVERSI
 #define REVERSI
 
+#include <cstring>
+#include <map>
+
 class Reversi
 {
 public:
     Reversi();
     ~Reversi();
 
+    static const int BOARD_SIZE = 8;
     enum PieceType{EMPTY, WHITE, BLACK, MARKER};
 
     int getPiece(int x,  int y);
@@ -23,16 +27,15 @@ public:
     int gameWinner();
 
 private:
-    int table[8][8];
-    int turn;
-    int whiteScore;
-    int blackScore;
+    int table[BOARD_SIZE][BOARD_SIZE];
+    PieceType turn;
+    std::map<PieceType,int> score;
+    int markers;
 
-    bool findMatch(int incX, int incY, int i, int j);
-    void changePieces(int incX, int incY, int i, int j);
+    bool scout(int incX, int incY, int i, int j);
+    void flipPieces(int incX, int incY, int i, int j);
     void transformPieces(int i, int j);
     bool isMarker(int i, int j);
-    void calculateScores();
     void removeMarkers();
     void generateNewMarkers();
 };
