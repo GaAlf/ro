@@ -43,10 +43,8 @@ void ROWindow::initGame()
 
 void ROWindow::initTable()
 {
-    for(int i=0; i<8; i++)
-    {
-        for(int j=0; j<8; j++)
-        {
+    for(int i=0; i<Reversi::BOARD_SIZE; i++) {
+        for(int j=0; j<Reversi::BOARD_SIZE; j++) {
             this->tableOfPieces[i][j] = NULL;
         }
     }
@@ -54,7 +52,7 @@ void ROWindow::initTable()
 
 void ROWindow::setPieceOnTable(QString pieceName, int x, int y)
 {
-    if(x < 0 || y < 0 || x >= 8 || y >= 8)
+    if(x < 0 || y < 0 || x >= Reversi::BOARD_SIZE || y >= Reversi::BOARD_SIZE)
     {
         std::cout << "Error: index x:" << x << " or y:" << y << " out of bounding." << std::endl;
         return;
@@ -101,30 +99,23 @@ int ROWindow::calculatePixel(int x)
 void ROWindow::verifyEndGame()
 {
     if(this->game->endGame()){
-        ui->statusBar->showMessage("End Game!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        ui->statusBar->showMessage("End Game!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        QString winner = "Black";
-        int win = this->game->gameWinner();
-        if(win == Reversi::WHITE)
-        {
-            winner = "White";
+        if(game->getBlackScore() == game->getWhiteScore() ) {
+            QMessageBox::question(this,"Reversi", "Game set! There was no winner!",QMessageBox::Ok);
         }
-        else{
-            if(win == Reversi::EMPTY)
-            {
-                winner = "No one";
-            }
+        else {
+            QString winner = game->getBlackScore() > game->getWhiteScore() ? "Black" : "White";
+            QMessageBox::question(this,"Reversi", "Game set! "+winner+" wins.",QMessageBox::Ok);
         }
-
-        QMessageBox::question(this,"Reversi", "End Game! The winner is "+winner+".",QMessageBox::Ok);
     }
 }
 
 void ROWindow::updateTable()
 {
-    for(int i=0; i<8; i++)
+    for(int i=0; i<Reversi::BOARD_SIZE; i++)
     {
-        for(int j=0; j<8; j++)
+        for(int j=0; j<Reversi::BOARD_SIZE; j++)
         {
             int pieceType = game->getPiece(i,j);
             switch(pieceType)
@@ -145,9 +136,7 @@ void ROWindow::updateTable()
         }
     }
 
-    QString turn = "Black";
-    if(this->game->getTurn() == Reversi::WHITE)
-        turn = "White";
+    QString turn = this->game->getTurn() == Reversi::WHITE ? "White" : "Black";
 
     QString black_score = QString::number(this->game->getBlackScore());
     QString white_score = QString::number(this->game->getWhiteScore());
@@ -161,7 +150,7 @@ void ROWindow::updateTable()
 
 void ROWindow::playGame(int i, int j)
 {
-    if(i < 0 || j < 0 || i >= 8 || j >= 8)
+    if(i < 0 || j < 0 || i >= Reversi::BOARD_SIZE || j >= Reversi::BOARD_SIZE)
     {
         std::cout << "Error: index i:" << i << " or j:" << j << " out of bounding." << std::endl;
         return;
@@ -177,7 +166,7 @@ void ROWindow::playGame(int i, int j)
         ui->label_lastMove->setText(pos);
     }
     else{
-        ui->statusBar->showMessage("Invalid move!", 5000);
+        ui->statusBar->showMessage("Invalid move! ", 5000);
     }
 }
 
@@ -208,7 +197,7 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
 void ROWindow::playCPU()
 {
     int i=0,j=0;
-    ArtificialIntelligence::calculateBetterMove(i,j,this->game);
+    ArtificialIntelligence::calculateBetterMove(i,j,game);
 
     this->playGame(i,j);
 }
@@ -225,7 +214,7 @@ void ROWindow::skipTurn()
     int totalMarkers = this->game->getTotalMarkers();
     if(totalMarkers > 0)
     {
-        ui->statusBar->showMessage("You can play, so you can't skip turn.", 5000);
+        ui->statusBar->showMessage("You can only skip when you can't play.", 5000);
         return;
     }
     else

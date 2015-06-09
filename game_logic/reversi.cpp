@@ -118,19 +118,6 @@ bool Reversi::isMarker(int i, int j)
     return false;
 }
 
-void Reversi::removeMarkers()
-{
-    for(int i=0; i < BOARD_SIZE; i++) {
-        for(int j=0; j < BOARD_SIZE; j++) {
-            if(this->table[i][j] == Reversi::MARKER) {
-                this->table[i][j] = Reversi::EMPTY;
-            }
-        }
-    }
-
-    this->score[MARKER] = 0;
-}
-
 void Reversi::generateNewMarkers()
 {
     for(int i=0; i < BOARD_SIZE; i++) {
@@ -157,11 +144,11 @@ bool Reversi::play(int i, int j)
 
 bool Reversi::endGame()
 {
-    int totalMarkers = this->getTotalMarkers();
+    int totalMarkers = this->score[MARKER];
     if(totalMarkers == 0)
     {
         this->changeTurn();
-        totalMarkers = this->getTotalMarkers();
+        totalMarkers = this->score[MARKER];
         this->changeTurn();
         if(totalMarkers == 0)
         {
@@ -170,10 +157,3 @@ bool Reversi::endGame()
     }
     return false;
 }
-
-int Reversi::gameWinner()
-{
-    if(this->score[WHITE] == this->score[BLACK]) return Reversi::EMPTY;
-    else return this->score[WHITE] > this->score[BLACK] ? this->score[WHITE] : this->score[BLACK];
-}
-

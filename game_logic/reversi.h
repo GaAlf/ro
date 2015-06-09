@@ -24,7 +24,6 @@ public:
     bool hasMarkers();
     int getTotalMarkers();
     bool endGame();
-    int gameWinner();
 
 private:
     int table[BOARD_SIZE][BOARD_SIZE];
@@ -36,7 +35,6 @@ private:
     void flipPieces(int incX, int incY, int i, int j);
     void transformPieces(int i, int j);
     bool isMarker(int i, int j);
-    void removeMarkers();
     void generateNewMarkers();
 };
 
