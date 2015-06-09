@@ -74,6 +74,16 @@ bool Reversi::scout(int incX, int incY, int i, int j)
     return false;
 }
 
+std::vector< std::pair<int,int> > Reversi::findMarkers() {
+    std::vector< std::pair<int,int> > ret;
+    for(int i = 0; i < this->BOARD_SIZE; i++) {
+        for(int j = 0; j < this->BOARD_SIZE; j++) {
+            if(table[i][j] == MARKER) ret.push_back( std::pair<int,int>(i,j) );
+        }
+    }
+    return ret;
+}
+
 void Reversi::flipPieces(int incX, int incY, int i, int j)
 {
     if(incX == 0 && incY == 0) { return; }

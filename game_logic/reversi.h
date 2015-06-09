@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <map>
+#include <vector>
 
 class Reversi
 {
@@ -24,6 +25,8 @@ public:
     bool hasMarkers();
     int getTotalMarkers();
     bool endGame();
+
+    std::vector< std::pair<int, int> > findMarkers();
 
 private:
     int table[BOARD_SIZE][BOARD_SIZE];
