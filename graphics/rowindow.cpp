@@ -27,15 +27,25 @@ void ROWindow::initGame()
     QGraphicsScene *scene = new QGraphicsScene();
 
     QString imageTableFile = "imgs/reversi_table.png";
+    QString imageGridFile = "imgs/reversi_grid.png";
     QImage imageTable(imageTableFile);
+    QImage imageGrid(imageGridFile);
     if(imageTable.isNull())
     {
         std::cout << "Error: file " << imageTableFile.toStdString() << " not found." << std::endl;
         return;
     }
 
+    if(imageGrid.isNull())
+    {
+        std::cout << "Error: file " << imageGridFile.toStdString() << " not found." << std::endl;
+        return;
+    }
+
     QGraphicsPixmapItem *itemTable = new QGraphicsPixmapItem(QPixmap::fromImage(imageTable));
+    QGraphicsPixmapItem *itemGrid = new QGraphicsPixmapItem(QPixmap::fromImage(imageGrid));
     scene->addItem(itemTable);
+    scene->addItem(itemGrid);
     ui->graphicsView->setScene(scene);
 
     ui->graphicsView->show();
