@@ -268,9 +268,9 @@
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>16</x>
-       <y>200</y>
-       <width>71</width>
+       <x>10</x>
+       <y>360</y>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -291,9 +291,9 @@
     <widget class="QLabel" name="label_turn">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>200</y>
-       <width>71</width>
+       <x>10</x>
+       <y>400</y>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -328,8 +328,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>240</y>
-       <width>151</width>
+       <y>450</y>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -350,10 +350,10 @@
     <widget class="QLabel" name="label_lastMove">
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>280</y>
-       <width>121</width>
-       <height>51</height>
+       <x>10</x>
+       <y>490</y>
+       <width>161</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -365,6 +365,64 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_playAt">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>161</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>161</width>
+       <height>27</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>C4</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Play at:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

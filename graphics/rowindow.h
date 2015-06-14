@@ -39,6 +39,8 @@ private slots:
     void restartGame();
     void skipTurn();
 
+    void on_lineEdit_playAt_returnPressed();
+
 private:
     Ui::ROWindow *ui;
     Piece* tableOfPieces[8][8];

@@ -8,6 +8,9 @@ ROWindow::ROWindow(QWidget *parent) :
     ui->setupUi(this);
     this->game = new Reversi();
 
+    ui->lineEdit_playAt->setMaxLength(2);
+    ui->lineEdit_playAt->setInputMask(">AD");
+
     connect(ui->restartButton, SIGNAL(released()), this, SLOT(restartGame()));
     connect(ui->playCPUButton, SIGNAL(released()), this, SLOT(playCPU()));
     connect(ui->skipTurnButton, SIGNAL(released()), this, SLOT(skipTurn()));
@@ -224,3 +227,12 @@ void ROWindow::skipTurn()
     }
 }
 
+
+void ROWindow::on_lineEdit_playAt_returnPressed()
+{
+    QString pos = ui->lineEdit_playAt->text();
+    int i = pos.at(0).toUpper().toLatin1() - 'A';
+    int j = pos.at(1).toUpper().toLatin1() - '1';
+
+    this->playGame(i,j);
+}
