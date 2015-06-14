@@ -4,6 +4,7 @@
 #include <cstring>
 #include <map>
 #include <vector>
+#include <deque>
 
 class Reversi
 {
@@ -25,6 +26,8 @@ public:
     bool hasMarkers();
     int getTotalMarkers();
     bool endGame();
+    void undoLastMove();
+    bool getLastMove(int &i, int &j);
 
     std::vector< std::pair<int, int> > findMarkers();
 
@@ -33,6 +36,8 @@ private:
     PieceType turn;
     std::map<PieceType,int> score;
     int markers;
+
+    std::deque< std::pair<int,int> > dequeOfMoves;
 
     bool scout(int incX, int incY, int i, int j);
     void flipPieces(int incX, int incY, int i, int j);

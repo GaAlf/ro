@@ -25,6 +25,7 @@ void Reversi::initGame()
 
 void Reversi::restartGame()
 {
+    this->dequeOfMoves.clear();
     memset( table, EMPTY, BOARD_SIZE*BOARD_SIZE*sizeof(table[0][0]) );
     this->initGame();
 }
@@ -143,12 +144,49 @@ bool Reversi::play(int i, int j)
     if(this->table[i][j] != Reversi::MARKER)
         return false;
 
+    std::pair<int,int> move(i,j);
+    this->dequeOfMoves.push_front(move);
+
     this->table[i][j] = this->turn;
     this->score[this->turn]++;
     this->transformPieces(i,j);
 
     this->changeTurn();
 
+    return true;
+}
+
+void Reversi::undoLastMove()
+{
+    if(this->dequeOfMoves.empty())
+        return;
+
+    this->dequeOfMoves.pop_front();
+
+    std::deque< std::pair<int,int> > newdeque;
+    std::swap(this->dequeOfMoves,newdeque);
+
+    this->restartGame();
+
+    std::pair<int,int> move;
+    while(!newdeque.empty())
+    {
+        move = newdeque.back();
+        newdeque.pop_back();
+
+        this->play(move.first,move.second);
+    }
+}
+
+bool Reversi::getLastMove(int &i, int &j)
+{
+    i = 0; j = 0;
+    if(this->dequeOfMoves.empty())
+        return false;
+
+    std::pair<int,int> move = this->dequeOfMoves.front();
+    i = move.first;
+    j = move.second;
     return true;
 }
 
