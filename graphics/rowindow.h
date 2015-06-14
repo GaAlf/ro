@@ -41,6 +41,8 @@ private slots:
 
     void on_lineEdit_playAt_returnPressed();
 
+    void on_undoLastMoveButton_released();
+
 private:
     Ui::ROWindow *ui;
     Piece* tableOfPieces[8][8];

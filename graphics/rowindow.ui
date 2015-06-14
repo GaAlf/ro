@@ -374,7 +374,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>230</y>
        <width>161</width>
        <height>27</height>
       </rect>
@@ -409,7 +409,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>200</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -426,6 +426,19 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="undoLastMoveButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>270</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Undo Last Move</string>
      </property>
     </widget>
    </widget>

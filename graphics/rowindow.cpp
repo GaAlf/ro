@@ -149,6 +149,20 @@ void ROWindow::updateTable()
         }
     }
 
+    int x=0,y=0;
+    if(this->game->getLastMove(x,y))
+    {
+        QChar line = 'A'+x;
+        QChar column = '1'+y;
+        QString pos = " "+(QString)line+""+(QString)column;
+        ui->statusBar->showMessage("Move on "+pos, 5000);
+        ui->label_lastMove->setText(pos);
+    }
+    else
+    {
+        ui->label_lastMove->setText("");
+    }
+
     QString turn = this->game->getTurn() == Reversi::WHITE ? "White" : "Black";
 
     QString black_score = QString::number(this->game->getBlackScore());
@@ -172,11 +186,6 @@ void ROWindow::playGame(int i, int j)
     bool validMove = this->game->play(i,j);
     if(validMove){
         this->updateTable();
-        QChar line = 'A'+i;
-        QChar column = '1'+j;
-        QString pos = " "+(QString)line+""+(QString)column;
-        ui->statusBar->showMessage("Move on "+pos, 5000);
-        ui->label_lastMove->setText(pos);
     }
     else{
         ui->statusBar->showMessage("Invalid move! ", 5000);
@@ -245,4 +254,10 @@ void ROWindow::on_lineEdit_playAt_returnPressed()
     int j = pos.at(1).toUpper().toLatin1() - '1';
 
     this->playGame(i,j);
+}
+
+void ROWindow::on_undoLastMoveButton_released()
+{
+    this->game->undoLastMove();
+    this->updateTable();
 }
