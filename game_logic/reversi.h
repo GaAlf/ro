@@ -28,6 +28,7 @@ public:
     bool endGame();
     void undoLastMove();
     bool getLastMove(int &i, int &j);
+    bool isPlayableAt(int i, int j);
 
     std::vector< std::pair<int, int> > findMarkers();
 

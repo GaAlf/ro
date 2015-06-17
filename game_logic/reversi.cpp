@@ -205,3 +205,12 @@ bool Reversi::endGame()
     }
     return false;
 }
+
+bool Reversi::isPlayableAt(int i, int j)
+{
+    int pos = this->getPiece(i,j);
+    if(pos == Reversi::BLACK || pos == Reversi::WHITE)
+        return false;
+    else
+        return true;
+}
