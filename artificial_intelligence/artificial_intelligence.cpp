@@ -95,7 +95,7 @@ int ArtificialIntelligence::h1(Reversi *game, int i, int j)
     return h;
 }
 
-//the least distance between edges.
+//the least distance between corners.
 int ArtificialIntelligence::h2(Reversi *game, int i, int j)
 {
     int h = 64;
