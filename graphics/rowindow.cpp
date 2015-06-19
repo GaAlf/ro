@@ -218,17 +218,43 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
 
 void ROWindow::playCPU()
 {
-    int i=0,j=0;
-    ArtificialIntelligence::calculateBetterMove(i,j,game);
+    while(!this->game->endGame())
+    {
+        if(this->game->getTotalMarkers() == 0)
+        {
+            this->game->changeTurn();
+        }
 
-    this->playGame(i,j);
+        int temp = this->game->getBlackScore();
+
+        //h0 - black
+        if(this->game->getTurn() == Reversi::BLACK)
+        {
+            int i=0,j=0;
+            ArtificialIntelligence ia(this->game);
+            ia.setAgent(0);
+            ia.calculateBetterMove(i,j);
+            this->playGame(i,j);
+        }
+        else
+        {
+            //h3 - white
+            int i=0,j=0;
+            ArtificialIntelligence ia(this->game);
+            ia.setAgent(3);
+            ia.calculateBetterMove(i,j);
+            this->playGame(i,j);
+        }
+        if(temp == this->game->getBlackScore())
+            break;
+        //QThread::msleep(500);
+    }
 }
 
 void ROWindow::restartGame()
 {
     this->game->restartGame();
     this->updateTable();
-    ui->label_lastMove->setText("");
 }
 
 void ROWindow::skipTurn()

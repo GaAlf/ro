@@ -9,6 +9,7 @@
 #include <QString>
 #include <iostream>
 #include <QMessageBox>
+#include <QThread>
 
 
 #include "piece.h"

@@ -7,17 +7,25 @@
 class ArtificialIntelligence
 {
 public:
-    ArtificialIntelligence();
+    ArtificialIntelligence(Reversi *game);
     ~ArtificialIntelligence();
 
-    static int heuristic(Reversi *game, int level, int i, int j);
-    static void calculateBetterMove(int &i, int &j, Reversi *game);
+    int heuristic();
+    void calculateBetterMove(int &i, int &j);
+    void minMax(int &i, int &j);
+
+    void setAgent(int agent);
+    void setLevel(int level);
 
 private:
-    static int h0(Reversi *game, int i, int j);
-    static int h1(Reversi *game, int i, int j);
-    static int h2(Reversi *game, int i, int j);
-    static int h3(Reversi *game, int i, int j);
+    Reversi *game;
+    int agent;
+    int level;
+
+    int h0(int i, int j);
+    int h1(int i, int j);
+    int h2(int i, int j);
+    int h3(int i, int j);
 };
 
 #endif // ARTIFICIALINTELLIGENCE

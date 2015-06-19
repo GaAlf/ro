@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <deque>
+#include <iostream>
 
 class Reversi
 {
@@ -31,6 +32,8 @@ public:
     bool isPlayableAt(int i, int j);
 
     std::vector< std::pair<int, int> > findMarkers();
+
+    std::deque< std::pair<int,int> > findDequeOfMarkers();
 
 private:
     int table[BOARD_SIZE][BOARD_SIZE];

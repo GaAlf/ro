@@ -1,14 +1,26 @@
 #include "artificial_intelligencei.h"
 
 
-ArtificialIntelligence::ArtificialIntelligence()
+ArtificialIntelligence::ArtificialIntelligence(Reversi *game)
 {
-
+    this->game = game;
+    this->agent = 0;
+    this->level = 2;
 }
 
 ArtificialIntelligence::~ArtificialIntelligence()
 {
+    this->game = NULL;
+}
 
+void ArtificialIntelligence::setAgent(int agent)
+{
+    this->agent = agent;
+}
+
+void ArtificialIntelligence::setLevel(int level)
+{
+    this->level = level;
 }
 
 //template <typename T>
@@ -21,9 +33,9 @@ ArtificialIntelligence::~ArtificialIntelligence()
 //    return std::advance(begin,k);
 //}
 
-void ArtificialIntelligence::calculateBetterMove(int &i, int &j, Reversi *game)
+void ArtificialIntelligence::calculateBetterMove(int &i, int &j)
 {
-    int limit = game->BOARD_SIZE-1;
+    /*int limit = game->BOARD_SIZE-1;
     if(game->getPiece(0,0) == Reversi::MARKER) { i = j = 0; return; }
     else if(game->getPiece(0,limit) == Reversi::MARKER) { i = 0; j = limit; return; }
     else if(game->getPiece(limit,0) == Reversi::MARKER) { j = 0; i = limit; return; }
@@ -33,46 +45,142 @@ void ArtificialIntelligence::calculateBetterMove(int &i, int &j, Reversi *game)
         std::pair<int,int> pair = *game->findMarkers().begin();
 //        std::advance(it,)
         i=pair.first; j=pair.second;
-    }
+    }*/
+
+    this->minMax(i,j);
 }
 
-int ArtificialIntelligence::heuristic(Reversi *game, int level, int i, int j)
+void ArtificialIntelligence::minMax(int &i, int &j)
+{
+    std::deque< std::pair<int,int> > markers(this->game->findDequeOfMarkers());
+
+    std::pair< std::pair<int,int>, int> betterMove(std::pair<int,int>(-1,-1),-1);
+
+    while(!markers.size() == 0)
+    {
+        std::pair<int,int> move = markers.front();
+        markers.pop_front();
+
+        bool validMove = this->game->play(move.first, move.second);
+        if(!validMove)
+        {
+            std::cout << "minmax 1!! -- i: " << move.first << " -- j: " << move.second << std::endl;
+            continue;
+        }
+
+        std::deque< std::pair<int,int> > markersLevel2 = this->game->findDequeOfMarkers();
+        std::pair< std::pair<int,int>, int> worstMove(std::pair<int,int>(-1,-1),-1);
+
+        while(!markersLevel2.empty())
+        {
+            std::pair<int,int> move2 = markersLevel2.front();
+            markersLevel2.pop_front();
+
+            bool validMove2 = this->game->play(move2.first, move2.second);
+            if(!validMove2)
+            {
+                std::cout << "minmax 2!!" << std::endl;
+                continue;
+            }
+            int h = this->heuristic();
+            this->game->undoLastMove();
+
+            if(worstMove.second < h)
+            {
+                worstMove.first = move2;
+                worstMove.second = h;
+            }
+
+
+        }
+
+        this->game->undoLastMove();
+
+        if(betterMove.second == -1 || betterMove.second > worstMove.second)
+        {
+            betterMove.first = move;
+            betterMove.second = worstMove.second;
+        }
+
+    }
+
+    i = betterMove.first.first;
+    j = betterMove.first.second;
+}
+
+int ArtificialIntelligence::heuristic()
 {
     int h = 0;
-    switch (level) {
-    case 1:
-        h = ArtificialIntelligence::h1(game,i,j);
-        break;
-    case 2:
-        h = ArtificialIntelligence::h2(game,i,j);
-        break;
-    default:
-        h = ArtificialIntelligence::h0(game,i,j);
-        break;
+
+    std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
+
+    while(!markers.empty())
+    {
+        std::pair<int,int> move = markers.front();
+
+        if(markers.size() == 0)
+        {
+            std::cout << "eita i: " << move.first << " j: " << move.second << std::endl;
+        }
+
+        markers.pop_front();
+
+        std::cout << "size!!! --- " << markers.size() << std::endl;
+
+        if(!this->game->isPlayableAt(move.first,move.second))
+        {
+            std::cout << "deu ruim heuristic geral!!!" << std::endl;
+            continue;
+        }
+
+        switch (this->agent) {
+        case 1:
+            h += this->h1(move.first,move.second);
+            break;
+        case 2:
+            h += this->h2(move.first,move.second);
+            break;
+        case 3:
+            h += this->h3(move.first,move.second);
+            break;
+        default:
+            h += this->h0(move.first,move.second);
+            break;
+        }
+
+        if(markers.size() == 0)
+        {
+            std::cout << "eita i: " << move.first << " j: " << move.second << std::endl;
+        }
+
     }
 
     return h;
 }
 
 //The bigest score in one move.
-int ArtificialIntelligence::h0(Reversi *game, int i, int j)
+int ArtificialIntelligence::h0(int i, int j)
 {
     int h = 64;
     int old_score = 0;
-    if(game->getTurn() == Reversi::BLACK)
-        old_score = game->getBlackScore();
+    if(this->game->getTurn() == Reversi::BLACK)
+        old_score = this->game->getBlackScore();
     else
-        old_score = game->getWhiteScore();
+        old_score = this->game->getWhiteScore();
 
-    game->play(i,j);
+    bool validMove = this->game->play(i,j);
+    if(!validMove)
+    {
+        std::cout << "deu ruim h0!!" << std::endl;
+    }
 
     int new_score = 0;
-    if(game->getTurn() == Reversi::WHITE)
-        new_score = game->getBlackScore();
+    if(this->game->getTurn() == Reversi::WHITE)
+        new_score = this->game->getBlackScore();
     else
-        new_score = game->getWhiteScore();
+        new_score = this->game->getWhiteScore();
 
-    game->undoLastMove();
+    this->game->undoLastMove();
 
     int move_score = new_score - old_score;
 
@@ -82,21 +190,25 @@ int ArtificialIntelligence::h0(Reversi *game, int i, int j)
 }
 
 //The least number of markers.
-int ArtificialIntelligence::h1(Reversi *game, int i, int j)
+int ArtificialIntelligence::h1(int i, int j)
 {
     int h = 0;
 
-    game->play(i,j);
+    bool validMove = this->game->play(i,j);
+    if(!validMove)
+    {
+        std::cout << "deu ruim h1!!" << std::endl;
+    }
 
-    h = game->getTotalMarkers();
+    h = this->game->getTotalMarkers();
 
-    game->undoLastMove();
+    this->game->undoLastMove();
 
     return h;
 }
 
 //the least distance between corners.
-int ArtificialIntelligence::h2(Reversi *game, int i, int j)
+int ArtificialIntelligence::h2(int i, int j)
 {
     int h = 64;
 
@@ -106,9 +218,6 @@ int ArtificialIntelligence::h2(Reversi *game, int i, int j)
     {
         int tempX = (x/2 == 0) ? 0 : 7;
         int tempY = (x/2 == 1) ? 7 : 0;
-
-        if(!game->isPlayableAt(tempX,tempY))
-            continue;
 
         tempX = std::abs(tempX - i);
         tempY = std::abs(tempY - j);
@@ -128,12 +237,12 @@ int ArtificialIntelligence::h2(Reversi *game, int i, int j)
     return h;
 }
 
-int ArtificialIntelligence::h3(Reversi *game, int i, int j)
+int ArtificialIntelligence::h3(int i, int j)
 {
     int h = 0;
 
     //H2
-    int h2 = ArtificialIntelligence::h2(game,i,j);
+    int h2 = this->h2(i,j);
 
     if(h2 == 0)
         return h2;
@@ -144,22 +253,26 @@ int ArtificialIntelligence::h3(Reversi *game, int i, int j)
     int h0 = 64;
 
     int old_score = 0;
-    if(game->getTurn() == Reversi::BLACK)
-        old_score = game->getBlackScore();
+    if(this->game->getTurn() == Reversi::BLACK)
+        old_score = this->game->getBlackScore();
     else
-        old_score = game->getWhiteScore();
+        old_score = this->game->getWhiteScore();
 
-    game->play(i,j);
+    bool validMove = this->game->play(i,j);
+    if(!validMove)
+    {
+        std::cout << "deu ruim h3!!" << std::endl;
+    }
 
     int new_score = 0;
-    if(game->getTurn() == Reversi::WHITE)
-        new_score = game->getBlackScore();
+    if(this->game->getTurn() == Reversi::WHITE)
+        new_score = this->game->getBlackScore();
     else
-        new_score = game->getWhiteScore();
+        new_score = this->game->getWhiteScore();
 
-    h1 = game->getTotalMarkers();
+    h1 = this->game->getTotalMarkers();
 
-    game->undoLastMove();
+    this->game->undoLastMove();
 
     int move_score = new_score - old_score;
 

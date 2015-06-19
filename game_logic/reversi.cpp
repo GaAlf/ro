@@ -85,6 +85,16 @@ std::vector< std::pair<int,int> > Reversi::findMarkers() {
     return ret;
 }
 
+std::deque< std::pair<int,int> > Reversi::findDequeOfMarkers() {
+    std::deque< std::pair<int,int> > ret;
+    for(int i = 0; i < this->BOARD_SIZE; i++) {
+        for(int j = 0; j < this->BOARD_SIZE; j++) {
+            if(table[i][j] == MARKER) ret.push_front( std::pair<int,int>(i,j) );
+        }
+    }
+    return ret;
+}
+
 void Reversi::flipPieces(int incX, int incY, int i, int j)
 {
     if(incX == 0 && incY == 0) { return; }
@@ -172,15 +182,14 @@ void Reversi::undoLastMove()
     while(!newdeque.empty())
     {
         move = newdeque.back();
-        newdeque.pop_back();
-
         this->play(move.first,move.second);
+        newdeque.pop_back();
     }
 }
 
 bool Reversi::getLastMove(int &i, int &j)
 {
-    i = 0; j = 0;
+    i = -1; j = -1;
     if(this->dequeOfMoves.empty())
         return false;
 
@@ -209,7 +218,7 @@ bool Reversi::endGame()
 bool Reversi::isPlayableAt(int i, int j)
 {
     int pos = this->getPiece(i,j);
-    if(pos == Reversi::BLACK || pos == Reversi::WHITE)
+    if(pos == Reversi::BLACK || pos == Reversi::WHITE || pos == Reversi::EMPTY)
         return false;
     else
         return true;
