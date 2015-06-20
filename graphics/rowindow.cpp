@@ -218,40 +218,32 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
 
 void ROWindow::playCPU()
 {
-    while(!this->game->endGame())
+    /*while(!this->game->endGame())
     {
         if(this->game->getTotalMarkers() == 0)
         {
             this->game->changeTurn();
         }
 
-        int temp = this->game->getBlackScore();
-
-        //h0 - black
+        //h2 - black
         if(this->game->getTurn() == Reversi::BLACK)
         {
             int i=0,j=0;
             ArtificialIntelligence ia(this->game);
-            ia.setAgent(0);
+            ia.setAgent(2);
             ia.calculateBetterMove(i,j);
             this->playGame(i,j);
         }
         else
-        {
+        {*/
             //h3 - white
             int i=0,j=0;
             ArtificialIntelligence ia(this->game);
-            ia.setAgent(3);
+            ia.setAgent(2);
             ia.calculateBetterMove(i,j);
             this->playGame(i,j);
-        }
-        if(temp == this->game->getBlackScore())
-        {
-            std::cout << "Deu ruim no fim das contas." << std::endl;
-            break;
-        }
-        //QThread::msleep(500);
-    }
+        /*}
+    }*/
 }
 
 void ROWindow::restartGame()

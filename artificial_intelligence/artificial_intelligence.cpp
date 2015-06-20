@@ -61,12 +61,7 @@ void ArtificialIntelligence::minMax(int &i, int &j)
         std::pair<int,int> move = markers.front();
         markers.pop_front();
 
-        bool validMove = this->game->play(move.first, move.second);
-        if(!validMove)
-        {
-            std::cout << "minmax 1!! -- i: " << move.first << " -- j: " << move.second << std::endl;
-            continue;
-        }
+        this->game->play(move.first, move.second);
 
         std::deque< std::pair<int,int> > markersLevel2 = this->game->findDequeOfMarkers();
         std::pair< std::pair<int,int>, int> worstMove(std::pair<int,int>(-1,-1),-1);
@@ -76,12 +71,8 @@ void ArtificialIntelligence::minMax(int &i, int &j)
             std::pair<int,int> move2 = markersLevel2.front();
             markersLevel2.pop_front();
 
-            bool validMove2 = this->game->play(move2.first, move2.second);
-            if(!validMove2)
-            {
-                std::cout << "minmax 2!!" << std::endl;
-                continue;
-            }
+            this->game->play(move2.first, move2.second);
+
             int h = this->heuristic();
             this->game->undoLastMove();
 
@@ -149,11 +140,7 @@ int ArtificialIntelligence::h0(int i, int j)
     else
         old_score = this->game->getWhiteScore();
 
-    bool validMove = this->game->play(i,j);
-    if(!validMove)
-    {
-        std::cout << "deu ruim h0!!" << std::endl;
-    }
+    this->game->play(i,j);
 
     int new_score = 0;
     if(this->game->getTurn() == Reversi::WHITE)
@@ -175,11 +162,7 @@ int ArtificialIntelligence::h1(int i, int j)
 {
     int h = 0;
 
-    bool validMove = this->game->play(i,j);
-    if(!validMove)
-    {
-        std::cout << "deu ruim h1!!" << std::endl;
-    }
+    this->game->play(i,j);
 
     h = this->game->getTotalMarkers();
 
@@ -239,11 +222,7 @@ int ArtificialIntelligence::h3(int i, int j)
     else
         old_score = this->game->getWhiteScore();
 
-    bool validMove = this->game->play(i,j);
-    if(!validMove)
-    {
-        std::cout << "deu ruim h3!!" << std::endl;
-    }
+    this->game->play(i,j);
 
     int new_score = 0;
     if(this->game->getTurn() == Reversi::WHITE)

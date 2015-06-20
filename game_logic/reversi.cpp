@@ -190,6 +190,11 @@ void Reversi::undoLastMove()
         }
         newdeque.pop_back();
     }
+
+    if(this->getTotalMarkers() == 0)
+    {
+        this->changeTurn();
+    }
 }
 
 bool Reversi::getLastMove(int &i, int &j)
