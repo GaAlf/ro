@@ -89,7 +89,7 @@ std::deque< std::pair<int,int> > Reversi::findDequeOfMarkers() {
     std::deque< std::pair<int,int> > ret;
     for(int i = 0; i < this->BOARD_SIZE; i++) {
         for(int j = 0; j < this->BOARD_SIZE; j++) {
-            if(table[i][j] == MARKER) ret.push_front( std::pair<int,int>(i,j) );
+            if(table[i][j] == Reversi::MARKER) ret.push_front( std::pair<int,int>(i,j) );
         }
     }
     return ret;
@@ -182,7 +182,12 @@ void Reversi::undoLastMove()
     while(!newdeque.empty())
     {
         move = newdeque.back();
-        this->play(move.first,move.second);
+        bool validMove = this->play(move.first,move.second);
+        if(!validMove)
+        {
+            this->changeTurn();
+            this->play(move.first,move.second);
+        }
         newdeque.pop_back();
     }
 }

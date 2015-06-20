@@ -246,7 +246,10 @@ void ROWindow::playCPU()
             this->playGame(i,j);
         }
         if(temp == this->game->getBlackScore())
+        {
+            std::cout << "Deu ruim no fim das contas." << std::endl;
             break;
+        }
         //QThread::msleep(500);
     }
 }

@@ -52,11 +52,11 @@ void ArtificialIntelligence::calculateBetterMove(int &i, int &j)
 
 void ArtificialIntelligence::minMax(int &i, int &j)
 {
-    std::deque< std::pair<int,int> > markers(this->game->findDequeOfMarkers());
+    std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
 
     std::pair< std::pair<int,int>, int> betterMove(std::pair<int,int>(-1,-1),-1);
 
-    while(!markers.size() == 0)
+    while(!markers.empty())
     {
         std::pair<int,int> move = markers.front();
         markers.pop_front();
@@ -117,21 +117,7 @@ int ArtificialIntelligence::heuristic()
     while(!markers.empty())
     {
         std::pair<int,int> move = markers.front();
-
-        if(markers.size() == 0)
-        {
-            std::cout << "eita i: " << move.first << " j: " << move.second << std::endl;
-        }
-
         markers.pop_front();
-
-        std::cout << "size!!! --- " << markers.size() << std::endl;
-
-        if(!this->game->isPlayableAt(move.first,move.second))
-        {
-            std::cout << "deu ruim heuristic geral!!!" << std::endl;
-            continue;
-        }
 
         switch (this->agent) {
         case 1:
@@ -146,11 +132,6 @@ int ArtificialIntelligence::heuristic()
         default:
             h += this->h0(move.first,move.second);
             break;
-        }
-
-        if(markers.size() == 0)
-        {
-            std::cout << "eita i: " << move.first << " j: " << move.second << std::endl;
         }
 
     }
