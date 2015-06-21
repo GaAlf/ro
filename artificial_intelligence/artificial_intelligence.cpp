@@ -29,30 +29,8 @@ void ArtificialIntelligence::setLevel(int level)
         this->level = 1;
 }
 
-//template <typename T>
-//T random_element(T begin, T end) {
-//    const unsigned long n = std::distance(begin,end);
-//    const unsigned long divisor = (5 + 1)/n;
-
-//    unsigned long k;
-//    do { k = std::rand()/divisor; } while(k>=n);
-//    return std::advance(begin,k);
-//}
-
 void ArtificialIntelligence::calculateBetterMove(int &i, int &j)
 {
-    /*int limit = game->BOARD_SIZE-1;
-    if(game->getPiece(0,0) == Reversi::MARKER) { i = j = 0; return; }
-    else if(game->getPiece(0,limit) == Reversi::MARKER) { i = 0; j = limit; return; }
-    else if(game->getPiece(limit,0) == Reversi::MARKER) { j = 0; i = limit; return; }
-    else if(game->getPiece(limit,limit) == Reversi::MARKER) { i = j = limit; return; }
-    else if(!game->findMarkers().empty()) {
-//        std::vector< std::pair<int,int> >::iterator it = game->findMarkers().begin();
-        std::pair<int,int> pair = *game->findMarkers().begin();
-//        std::advance(it,)
-        i=pair.first; j=pair.second;
-    }*/
-
     this->minMaxNLevel(i,j);
 }
 
@@ -202,28 +180,29 @@ int ArtificialIntelligence::heuristic()
 {
     int h = 0;
 
-    std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
-
-    while(!markers.empty())
-    {
-        std::pair<int,int> move = markers.front();
-        markers.pop_front();
-
-        switch (this->agent) {
-        case 1:
-            h += this->h1(move.first,move.second);
+    switch (this->agent) {
+        case 1: // maximize the number of markers.
+            h = 64 - this->game->getTotalMarkers();
             break;
-        case 2:
-            h += this->h2(move.first,move.second);
-            break;
-        case 3:
-            h += this->h3(move.first,move.second);
-            break;
-        default:
-            h += this->h0(move.first,move.second);
+        case 2: // try to aproach of corners.
+        {
+            std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
+            while(!markers.empty())
+            {
+                std::pair<int,int> move = markers.front();
+                markers.pop_front();
+                h += this->h2(move.first,move.second);
+            }
             break;
         }
-
+        default:
+        {
+            if(this->game->getTurn() == Reversi::WHITE)
+                h = 64 - this->game->getBlackScore() + this->game->getWhiteScore();
+            else
+                h = 64 + this->game->getBlackScore() - this->game->getWhiteScore();
+            break;
+        }
     }
 
     return h;

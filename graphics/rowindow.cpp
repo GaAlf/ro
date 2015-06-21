@@ -242,7 +242,7 @@ void ROWindow::playCPU()
             //h3 - white
             int i=0,j=0;
             ArtificialIntelligence ia(this->game);
-            ia.setAgent(2);
+            ia.setAgent(0);
             ia.setLevel(1+ui->comboBoxLevel->currentIndex());
             ui->statusBar->showMessage("Thinking...");
             ia.calculateBetterMove(i,j);
