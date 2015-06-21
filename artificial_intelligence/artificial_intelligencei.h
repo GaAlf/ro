@@ -13,6 +13,7 @@ public:
     int heuristic();
     void calculateBetterMove(int &i, int &j);
     void minMax(int &i, int &j);
+    void minMaxNLevel(int &i, int &j);
 
     void setAgent(int agent);
     void setLevel(int level);
@@ -21,6 +22,8 @@ private:
     Reversi *game;
     int agent;
     int level;
+
+    int minMaxRecursive(std::pair<int,int> move, int level);
 
     int h0(int i, int j);
     int h1(int i, int j);

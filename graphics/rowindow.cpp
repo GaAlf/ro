@@ -240,6 +240,7 @@ void ROWindow::playCPU()
             int i=0,j=0;
             ArtificialIntelligence ia(this->game);
             ia.setAgent(2);
+            ia.setLevel(3);
             ia.calculateBetterMove(i,j);
             this->playGame(i,j);
         /*}

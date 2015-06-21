@@ -15,12 +15,18 @@ ArtificialIntelligence::~ArtificialIntelligence()
 
 void ArtificialIntelligence::setAgent(int agent)
 {
-    this->agent = agent;
+    if(agent >= -1 && agent < 4)
+        this->agent = agent;
+    else
+        this->agent = 0;
 }
 
 void ArtificialIntelligence::setLevel(int level)
 {
-    this->level = level;
+    if(level > 0 && level < 100)
+        this->level = level;
+    else
+        this->level = 1;
 }
 
 //template <typename T>
@@ -47,7 +53,7 @@ void ArtificialIntelligence::calculateBetterMove(int &i, int &j)
         i=pair.first; j=pair.second;
     }*/
 
-    this->minMax(i,j);
+    this->minMaxNLevel(i,j);
 }
 
 void ArtificialIntelligence::minMax(int &i, int &j)
@@ -97,6 +103,87 @@ void ArtificialIntelligence::minMax(int &i, int &j)
 
     i = betterMove.first.first;
     j = betterMove.first.second;
+}
+
+
+void ArtificialIntelligence::minMaxNLevel(int &i, int &j)
+{
+    std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
+    int h = 0;
+    std::pair<int,int> betterMove(-1,-1);
+
+    while(!markers.empty())
+    {
+        std::pair<int,int> move = markers.front();
+        markers.pop_front();
+
+        int localH = this->minMaxRecursive(move,1);
+        if(betterMove.first == -1 || localH < h)
+        {
+            h = localH;
+            betterMove = move;
+        }
+    }
+
+    i = betterMove.first;
+    j = betterMove.second;
+}
+
+
+int ArtificialIntelligence::minMaxRecursive(std::pair<int,int> move, int level)
+{
+    this->game->play(move.first,move.second);
+
+    if(level == this->level) // The end of recursivity
+    {
+        int h = this->heuristic();
+        this->game->undoLastMove();
+        return h;
+    }
+
+    if(this->game->getTotalMarkers() == 0) // case the current player can't play.
+    {
+        this->game->changeTurn();
+        level++;
+        if(level == this->level) // The end of recursivity
+        {
+            int h = this->heuristic();
+            this->game->undoLastMove();
+            return h;
+        }
+    }
+
+    if(this->game->getTotalMarkers() == 0) // case the game end;
+    {
+        int h = this->heuristic();
+        this->game->undoLastMove();
+        return h;
+    }
+
+    std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
+    int localH = -1; //this value is impossible to heuristic to return
+
+    while(!markers.empty())
+    {
+        std::pair<int,int> move = markers.front();
+        markers.pop_front();
+
+        int h = this->minMaxRecursive(move,level+1);
+
+        if(level % 2 == 0)// Node min
+        {
+            if(localH == -1 || h < localH)
+                localH = h;
+        }
+        else //Node max
+        {
+            if(localH == -1 || h > localH)
+                localH = h;
+        }
+    }
+
+    this->game->undoLastMove();
+    return localH;
 }
 
 int ArtificialIntelligence::heuristic()
