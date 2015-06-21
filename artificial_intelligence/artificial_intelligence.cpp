@@ -176,11 +176,49 @@ int ArtificialIntelligence::minMaxRecursive(std::pair<int,int> move, int level, 
     return localH;
 }
 
+int ArtificialIntelligence::switchHeuristcs()
+{
+    if(this->agent == -1)
+    {
+        int countCorners = 0;
+
+        for(int x=0; x<4; x++)
+        {
+            int tempX = (x/2 == 0) ? 0 : 7;
+            int tempY = (x/2 == 1) ? 7 : 0;
+
+            if(this->game->getPiece(tempX,tempY) == this->game->getTurn())
+                countCorners++;
+        }
+
+        if(countCorners == 0)
+            return 2; // agent to get corners.
+
+        int scoreDiff = this->game->getBlackScore() - this->game->getWhiteScore();
+        if(this->game->getTurn() == Reversi::WHITE)
+        {
+            if(scoreDiff > 0)
+                return 1; // agent to get the biggest number of markers.
+            else
+                return 0; // agent to improve score.
+        }
+        else
+        {
+            if(scoreDiff < 0)
+                return 1; // agent to get the biggest number of markers.
+            else
+                return 0; // agent to improve score.
+        }
+    }
+    else
+        return this->agent;
+}
+
 int ArtificialIntelligence::heuristic()
 {
     int h = 0;
 
-    switch (this->agent) {
+    switch (this->switchHeuristcs()) {
         case 1: // maximize the number of markers.
             h = 64 - this->game->getTotalMarkers();
             break;
@@ -195,7 +233,7 @@ int ArtificialIntelligence::heuristic()
             }
             break;
         }
-        default:
+        default: //maximize your score.
         {
             if(this->game->getTurn() == Reversi::WHITE)
                 h = 64 - this->game->getBlackScore() + this->game->getWhiteScore();

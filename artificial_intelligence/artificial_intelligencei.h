@@ -24,6 +24,7 @@ private:
     int level;
 
     int minMaxRecursive(std::pair<int,int> move, int level, int alfaBeta);
+    int switchHeuristcs();
 
     int h0(int i, int j);
     int h1(int i, int j);
