@@ -241,7 +241,9 @@ void ROWindow::playCPU()
             ArtificialIntelligence ia(this->game);
             ia.setAgent(2);
             ia.setLevel(3);
+            ui->statusBar->showMessage("Thinking...");
             ia.calculateBetterMove(i,j);
+            ui->statusBar->showMessage("");
             this->playGame(i,j);
         /*}
     }*/
