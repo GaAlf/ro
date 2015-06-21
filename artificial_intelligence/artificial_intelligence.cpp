@@ -109,16 +109,16 @@ void ArtificialIntelligence::minMax(int &i, int &j)
 void ArtificialIntelligence::minMaxNLevel(int &i, int &j)
 {
     std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
-    int h = 0;
     std::pair<int,int> betterMove(-1,-1);
+    int h = -1;
 
     while(!markers.empty())
     {
         std::pair<int,int> move = markers.front();
         markers.pop_front();
 
-        int localH = this->minMaxRecursive(move,1);
-        if(betterMove.first == -1 || localH < h)
+        int localH = this->minMaxRecursive(move,1,h);
+        if(betterMove.first == -1 || localH < h) //The root node is min.
         {
             h = localH;
             betterMove = move;
@@ -130,7 +130,7 @@ void ArtificialIntelligence::minMaxNLevel(int &i, int &j)
 }
 
 
-int ArtificialIntelligence::minMaxRecursive(std::pair<int,int> move, int level)
+int ArtificialIntelligence::minMaxRecursive(std::pair<int,int> move, int level, int alfaBeta)
 {
     this->game->play(move.first,move.second);
 
@@ -168,17 +168,29 @@ int ArtificialIntelligence::minMaxRecursive(std::pair<int,int> move, int level)
         std::pair<int,int> move = markers.front();
         markers.pop_front();
 
-        int h = this->minMaxRecursive(move,level+1);
+        int h = this->minMaxRecursive(move,level+1,localH);
 
         if(level % 2 == 0)// Node min
         {
             if(localH == -1 || h < localH)
                 localH = h;
+
+            if(alfaBeta != -1 && localH < alfaBeta)
+            {
+                localH = alfaBeta;
+                break;
+            }
         }
         else //Node max
         {
             if(localH == -1 || h > localH)
                 localH = h;
+
+            if(alfaBeta != -1 && localH > alfaBeta)
+            {
+                localH = alfaBeta;
+                break;
+            }
         }
     }
 
