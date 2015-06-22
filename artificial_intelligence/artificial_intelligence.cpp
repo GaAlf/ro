@@ -269,6 +269,7 @@ int ArtificialIntelligence::h2(int i, int j)
 
     int distance_weight = 0;
     int weight = 1;
+
     for(int x=0; x<4; x++)
     {
         int tempX = (x/2 == 0) ? 0 : 7;
@@ -286,7 +287,7 @@ int ArtificialIntelligence::h2(int i, int j)
             weight += 100;
     }
 
-    if(h = 0)
+    if(h == 0)
         h = 300;
 
     h = (14 - h)*weight;
