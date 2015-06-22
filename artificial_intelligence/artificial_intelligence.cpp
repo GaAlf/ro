@@ -6,6 +6,7 @@ ArtificialIntelligence::ArtificialIntelligence(Reversi *game)
     this->game = game;
     this->agent = 0;
     this->level = 2;
+    this->myPiece = this->game->getTurn();
 }
 
 ArtificialIntelligence::~ArtificialIntelligence()
@@ -31,10 +32,11 @@ void ArtificialIntelligence::setLevel(int level)
 
 void ArtificialIntelligence::calculateBetterMove(int &i, int &j)
 {
+    this->switchHeuristcs();
     this->minMaxNLevel(i,j);
 }
 
-void ArtificialIntelligence::minMax(int &i, int &j)
+void ArtificialIntelligence::minMax2Levels(int &i, int &j)
 {
     std::deque< std::pair<int,int> > markers = this->game->findDequeOfMarkers();
 
@@ -176,10 +178,11 @@ int ArtificialIntelligence::minMaxRecursive(std::pair<int,int> move, int level, 
     return localH;
 }
 
-int ArtificialIntelligence::switchHeuristcs()
+void ArtificialIntelligence::switchHeuristcs()
 {
     if(this->agent == -1)
     {
+        int countMyCorners = 0;
         int countCorners = 0;
 
         for(int x=0; x<4; x++)
@@ -187,38 +190,49 @@ int ArtificialIntelligence::switchHeuristcs()
             int tempX = (x/2 == 0) ? 0 : 7;
             int tempY = (x/2 == 1) ? 7 : 0;
 
-            if(this->game->getPiece(tempX,tempY) == this->game->getTurn())
+            int piece = this->game->getPiece(tempX,tempY);
+            if(piece == this->myPiece)
+                countMyCorners++;
+
+            if(piece == Reversi::BLACK || piece == Reversi::WHITE)
                 countCorners++;
+
+            if(this->game->getPiece(tempX,tempY) == Reversi::MARKER)
+            {
+                this->agent = 2;
+                return;
+            }
         }
 
-        if(countCorners == 0)
-            return 2; // agent to get corners.
+        if( countCorners < 3 && countMyCorners < 3)
+        {
+            this->agent = 2; // agent to get corners.
+            return;
+        }
 
         int scoreDiff = this->game->getBlackScore() - this->game->getWhiteScore();
-        if(this->game->getTurn() == Reversi::WHITE)
+        if(this->myPiece == Reversi::BLACK)
         {
             if(scoreDiff > 0)
-                return 1; // agent to get the biggest number of markers.
+                this->agent = 1; // agent to get the biggest number of markers.
             else
-                return 0; // agent to improve score.
+                this->agent = 0; // agent to improve score.
         }
         else
         {
             if(scoreDiff < 0)
-                return 1; // agent to get the biggest number of markers.
+                this->agent = 1; // agent to get the biggest number of markers.
             else
-                return 0; // agent to improve score.
+                this->agent = 0; // agent to improve score.
         }
     }
-    else
-        return this->agent;
 }
 
 int ArtificialIntelligence::heuristic()
 {
     int h = 0;
 
-    switch (this->switchHeuristcs()) {
+    switch (this->agent) {
         case 1: // maximize the number of markers.
             h = 64 - this->game->getTotalMarkers();
             break;
@@ -231,11 +245,12 @@ int ArtificialIntelligence::heuristic()
                 markers.pop_front();
                 h += this->h2(move.first,move.second);
             }
+            h = 1000000 - h; // the value of h must be positive.
             break;
         }
         default: //maximize your score.
         {
-            if(this->game->getTurn() == Reversi::WHITE)
+            if(this->myPiece == Reversi::BLACK)
                 h = 64 - this->game->getBlackScore() + this->game->getWhiteScore();
             else
                 h = 64 + this->game->getBlackScore() - this->game->getWhiteScore();
@@ -246,116 +261,34 @@ int ArtificialIntelligence::heuristic()
     return h;
 }
 
-//The bigest score in one move.
-int ArtificialIntelligence::h0(int i, int j)
-{
-    int h = 64;
-    int old_score = 0;
-    if(this->game->getTurn() == Reversi::BLACK)
-        old_score = this->game->getBlackScore();
-    else
-        old_score = this->game->getWhiteScore();
-
-    this->game->play(i,j);
-
-    int new_score = 0;
-    if(this->game->getTurn() == Reversi::WHITE)
-        new_score = this->game->getBlackScore();
-    else
-        new_score = this->game->getWhiteScore();
-
-    this->game->undoLastMove();
-
-    int move_score = new_score - old_score;
-
-    h -= move_score;
-
-    return h;
-}
-
-//The least number of markers.
-int ArtificialIntelligence::h1(int i, int j)
-{
-    int h = 0;
-
-    this->game->play(i,j);
-
-    h = this->game->getTotalMarkers();
-
-    this->game->undoLastMove();
-
-    return h;
-}
-
 //the least distance between corners.
+//this function try to return the biggest value possible to pieces too close of corners.
 int ArtificialIntelligence::h2(int i, int j)
 {
     int h = 64;
 
     int distance_weight = 0;
-
+    int weight = 1;
     for(int x=0; x<4; x++)
     {
         int tempX = (x/2 == 0) ? 0 : 7;
         int tempY = (x/2 == 1) ? 7 : 0;
 
-        tempX = std::abs(tempX - i);
-        tempY = std::abs(tempY - j);
+        int tempXDiff = std::abs(tempX - i);
+        int tempYDiff = std::abs(tempY - j);
 
-        distance_weight = tempX + tempY;
+        distance_weight = tempXDiff + tempYDiff;
 
         if(distance_weight < h)
             h = distance_weight;
 
-        if(h == 1 || (tempX == 1 && tempY == 1))
-        {
-            h += 100;
-            break;
-        }
+        if(this->game->getPiece(tempX,tempY) == this->myPiece)
+            weight += 100;
     }
 
-    return h;
-}
+    if(h = 0)
+        h = 300;
 
-int ArtificialIntelligence::h3(int i, int j)
-{
-    int h = 0;
-
-    //H2
-    int h2 = this->h2(i,j);
-
-    if(h2 == 0)
-        return h2;
-
-    //H1
-    int h1 = 0;
-    //H0
-    int h0 = 64;
-
-    int old_score = 0;
-    if(this->game->getTurn() == Reversi::BLACK)
-        old_score = this->game->getBlackScore();
-    else
-        old_score = this->game->getWhiteScore();
-
-    this->game->play(i,j);
-
-    int new_score = 0;
-    if(this->game->getTurn() == Reversi::WHITE)
-        new_score = this->game->getBlackScore();
-    else
-        new_score = this->game->getWhiteScore();
-
-    h1 = this->game->getTotalMarkers();
-
-    this->game->undoLastMove();
-
-    int move_score = new_score - old_score;
-
-    h0 -= move_score;
-
-    //H3
-    h = h0 + h1 + h2;
-
+    h = (14 - h)*weight;
     return h;
 }

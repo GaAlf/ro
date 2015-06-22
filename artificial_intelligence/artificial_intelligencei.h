@@ -12,7 +12,7 @@ public:
 
     int heuristic();
     void calculateBetterMove(int &i, int &j);
-    void minMax(int &i, int &j);
+    void minMax2Levels(int &i, int &j);
     void minMaxNLevel(int &i, int &j);
 
     void setAgent(int agent);
@@ -20,16 +20,13 @@ public:
 
 private:
     Reversi *game;
+    int myPiece;
     int agent;
     int level;
 
     int minMaxRecursive(std::pair<int,int> move, int level, int alfaBeta);
-    int switchHeuristcs();
-
-    int h0(int i, int j);
-    int h1(int i, int j);
+    void switchHeuristcs();
     int h2(int i, int j);
-    int h3(int i, int j);
 };
 
 #endif // ARTIFICIALINTELLIGENCE
