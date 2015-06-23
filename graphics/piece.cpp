@@ -29,7 +29,9 @@ QGraphicsPixmapItem* Piece::loadPiece(QString piece, int x_pixel, int y_pixel)
         return NULL;
     }
 
-    QString imagePieceFile = "imgs/"+piece+"_piece.png";
+
+    QString currentDir = QCoreApplication::applicationDirPath();
+    QString imagePieceFile = currentDir.append("/")+"imgs/"+piece+"_piece.png";
 
     QImage imagePiece(imagePieceFile);
     if(imagePiece.isNull())

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QGraphicsPixmapItem>
 #include <iostream>
+#include <QCoreApplication>
 
 class Piece
 {

@@ -26,8 +26,9 @@ void ROWindow::initGame()
     this->initTable();
     QGraphicsScene *scene = new QGraphicsScene();
 
-    QString imageTableFile = "imgs/reversi_table.png";
-    QString imageGridFile = "imgs/reversi_grid.png";
+    QString currentDir = QCoreApplication::applicationDirPath();
+    QString imageTableFile = currentDir.append("/")+"imgs/reversi_table.png";
+    QString imageGridFile = currentDir.append("/")+"imgs/reversi_grid.png";
     QImage imageTable(imageTableFile);
     QImage imageGrid(imageGridFile);
     if(imageTable.isNull())
