@@ -218,6 +218,7 @@ void ROWindow::mousePressEvent(QMouseEvent *event)
 
 void ROWindow::playCPU()
 {
+    // This is just to test one AI vs another AI.
     /*while(!this->game->endGame())
     {
         if(this->game->getTotalMarkers() == 0)
